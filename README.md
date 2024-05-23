@@ -17,7 +17,7 @@ Controls:
 - Escape
   - Open pause menu
 - q
-  - Quit Game
+  - Quit Game  
  
 ![Smiley-Tile](https://github.com/BradG13531/GMinesweeper/assets/65570359/fa92d15b-b245-412f-8223-bbe787e4171a)
 - This button resets the game
@@ -26,9 +26,7 @@ Controls:
 - This button lets the user change the rows, columns, and amount of mines
 
 ![Quit-Tile](https://github.com/BradG13531/GMinesweeper/assets/65570359/2a1c33d9-fed7-4b50-9c1e-73c920a1b8a6)
-- This button will quit the game
-
-
+- This button will quit the game    
 
 Font used:
 "PixGamer Regular" by Bryndan Meyerholt
