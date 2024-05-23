@@ -530,6 +530,12 @@ public class Logic : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Q) && !NewGameMenu.GameIsPaused && !NewGameMenu.InsideCustom)
+        {
+            Debug.Log("Quitting...");
+            Application.Quit();
+        }
+        
         // Reveal and other buttons
         if (Input.GetMouseButtonDown(0))
         {
