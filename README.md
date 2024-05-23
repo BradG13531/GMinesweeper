@@ -28,5 +28,8 @@ Controls:
 ![Quit-Tile](https://github.com/BradG13531/GMinesweeper/assets/65570359/2a1c33d9-fed7-4b50-9c1e-73c920a1b8a6)
 - This button will quit the game    
 
+![image](https://github.com/BradG13531/GMinesweeper/assets/65570359/55c7ede4-20bb-4f1a-9dc5-92e252e6ac6c)
+
+
 Font used:
 "PixGamer Regular" by Bryndan Meyerholt
