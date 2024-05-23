@@ -25,6 +25,7 @@ public class Border : MonoBehaviour
     public Tile deadTile;
     public Tile menuTile;
     public Tile quitTile;
+    public Tile coolTile;
     
     // References to seven segment display tiles
     public Tile displayEmpty;
@@ -193,5 +194,15 @@ public class Border : MonoBehaviour
     public void ToggleTimer()
     {
         pauseTimer = !pauseTimer;
+    }
+
+    public void SetDead()
+    {
+        Tilemap.SetTile(SmileyLocation, deadTile);
+    }
+
+    public void SetCool()
+    {
+        Tilemap.SetTile(SmileyLocation, coolTile);
     }
 }

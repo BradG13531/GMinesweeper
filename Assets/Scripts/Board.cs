@@ -22,6 +22,7 @@ public class Board : MonoBehaviour
     public Tile explodingTile;
     public Tile hiddenTile;
     public Tile flagTile;
+    public Tile pressedTile;
 
     private void Awake()
     {

@@ -33,6 +33,11 @@ public class Logic : MonoBehaviour
     public NewGameMenu menu;
     private Cell[,] state;
 
+    public void SetWidth(int num)
+    {
+        width = num;
+    }
+
     // #0: Very first method executed 
     private void Awake()
     {
@@ -53,22 +58,34 @@ public class Logic : MonoBehaviour
         
         unrevealedCells = width * height;
         numFlags = numMines;
+
+        NewGameMenu.SetNewRows(9);
+        NewGameMenu.SetNewCols(9);
+        NewGameMenu.SetNewMines(10);
         
         AllHidden();
 
         Camera.main.transform.position = new Vector3((width) / 2f, (height + 2) / 2f, -10);
         // The orthographic size is the length from the middle to the edge of the camera,
         // the padding will give the extra unit of space at the edge.
-        // Camera.main.orthographicSize = Math.Max(width + 1, height + 3) / 2f + cameraPadding; 
-        Debug.Log(Camera.main.aspect);
-        // Camera.main.orthographicSize = Math.Max(width, height + 2) / 2f + cameraPadding;
-        if (height + 2 > width)
+        if (height + 2 >= width)
         {
-            Camera.main.orthographicSize = (height + 2) / 2f + cameraPadding;
+            Camera.main.orthographicSize = (height + 3) / 2f + cameraPadding;
         }
         else
         {
-            Camera.main.orthographicSize = width / Camera.main.aspect / 2f + cameraPadding;
+            // float widthSize = (width / Camera.main.aspect) * 0.5f + cameraPadding;
+            // while (widthSize < ((height + 3) / 2f + cameraPadding))
+            // {
+            //     widthSize++;
+            // }
+            float widthSize = width * Camera.main.aspect * 0.5f;
+            if (widthSize > 10)
+            {
+                widthSize = 10;
+            }
+
+            Camera.main.orthographicSize = widthSize;
         }
         
         border.Draw(width, height, numFlags);
@@ -463,13 +480,13 @@ public class Logic : MonoBehaviour
             }
         }
 
-        Debug.Log("Unrevealed: " + unrevealedCells + " mines: " + numMines);
         if (mineExloded && !gameOver)
         {
             Debug.Log("Game Over");
             gameOver = true;
             border.ToggleTimer();
             RevealAll();
+            border.SetDead();
             board.Draw(state);
         }
         else if (unrevealedCells == numMines && !gameOver)
@@ -478,6 +495,7 @@ public class Logic : MonoBehaviour
             gameOver = true;
             border.ToggleTimer();
             FlagRemainingMines();
+            border.SetCool();
             board.Draw(state);
         }
     }
@@ -548,18 +566,17 @@ public class Logic : MonoBehaviour
         {
             CreateMines(cellPosition.x, cellPosition.y);
             StartingArea(cellPosition.x, cellPosition.y);
-            Debug.Log("successful first move");
             firstMove = false;
         }
         else if (gameOver || cell.type == Cell.Type.Invalid || cell.revealed || cell.flagged || NewGameMenu.GameIsPaused)
         {
+            
             if (cellPosition.x == border.SmileyLocation.x && cellPosition.y == border.SmileyLocation.y)
             {
                 GameReset();
             }
             else if (cellPosition.x == border.MenuLocation.x && cellPosition.y == border.MenuLocation.y)
             {
-                Debug.Log("menu");
                 if (NewGameMenu.GameIsPaused)
                 {
                     
@@ -608,13 +625,27 @@ public class Logic : MonoBehaviour
         Vector3Int cellPosition = board.Tilemap.WorldToCell(worldPosition);
         Cell cell = GetCell(cellPosition.x, cellPosition.y);
 
+        // First move and game not paused
         if (firstMove && !NewGameMenu.GameIsPaused)
         {
             cell.flagged = !cell.flagged;
 
             state[cellPosition.x, cellPosition.y] = cell;
         }
-        else if (gameOver || cell.type == Cell.Type.Invalid || cell.revealed || numFlags == 0 || NewGameMenu.GameIsPaused)
+        
+        // Invalid State, can't put flag down
+        else if (gameOver || cell.type == Cell.Type.Invalid || cell.revealed || NewGameMenu.GameIsPaused)
+        {
+            return;
+        }
+        // Player wants to remove a flag when there are 0 flags left
+        else if (cell.flagged && numFlags == 0)
+        {
+            cell.flagged = !cell.flagged;
+            state[cellPosition.x, cellPosition.y] = cell;
+        }
+        // Player tries to place a flag when there are 0 flags left
+        else if (!cell.flagged && numFlags == 0)
         {
             return;
         }
